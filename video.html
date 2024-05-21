@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://unpkg.com/video.js@7/dist/video-js.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/video.js@7/dist/video.min.js"></script>
+  <style type="text/css">
+    .video-container {
+      height: 316px;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div class="video-container">
+    <video-js
+      class="vjs-fill vjs-big-play-centered"
+      controls
+      preload="auto"
+      poster="https://upcdn.io/W142hJk/image/example.mp4?input=video&f=webp&f2=jpeg">
+      <p class="vjs-no-js">To view this video please enable JavaScript.</p>
+    </video-js>
+  </div>
+  <script>
+    var vid = document.querySelector('video-js');
+    var player = videojs(vid, {responsive: true});
+    player.on('loadedmetadata', function() {
+      // Begin playing from the start of the video. (Required for 'f=hls-h264-rt'.)
+      player.currentTime(player.seekable().start(0));
+    });
+    player.src({
+      src: 'https://upcdn.io/W142hJk/video/example.mp4!f=hls-h264-rt&h=480&h=1080',
+      type: 'application/x-mpegURL'
+    });
+  </script>
+</body>
+</html>

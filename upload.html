@@ -1,101 +1,117 @@
 <!DOCTYPE html>
 <html>
-    <head>
-      <script src="https://js.bytescale.com/upload-widget/v4"></script>
-      <script>
-        // -----
-        // Configuration:
-        // https://www.bytescale.com/docs/upload-widget#configuration
-        // -----
-        const options = {
-          apiKey: "public_W142icW2Lp5TugHCBJ7yxEusYZRp", // Get API key: https://www.bytescale.com/get-started
-          maxFileCount: 1
-        };
-  
-        // import * as Bytescale from "@bytescale/upload-widget";
-        Bytescale.UploadWidget.open(options).then(
-          files => {
-            const fileUrls = files.map(x => x.fileUrl).join("\n");
-            const success = fileUrls.length === 0
-              ? "No file selected."
-              : `File uploaded:\n\n${fileUrls}`;
-            alert(success);
-          },
-          error => {
-            alert(error);
-          }
-        );
-      </script>
-        <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
         <title>OnlyDans</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
         <link href="assets/style.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="navbar">
-            <div class="TitleIMG">
-                <img src="assets/ONLYDANS.png"</img>
-            </div>
-            <ul>
-                <div id="app"></div>
+    <script src="https://js.bytescale.com/sdk/v3"></script>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="TitleIMG">
+          <img src="assets/ONLYDANS.png"</img>
+      </div>
+      <ul>
+          <div id="app"></div>
 
-            </ul>
-        </div>
-<!-- Initialize Clerk with your
-Clerk Publishable key and Frontend API URL -->
+      </ul>
+  </div>
+
+    <div class="upload">
+      <h1>Please select a file...</h1>
+    <input type="file" onchange="onFileSelected(event)" />
+    <script>
+      // DOM Elements
+      const d            = document
+      const h1           = d.getElementsByTagName("h1")[0]
+      const uploadButton = d.getElementsByTagName("input")[0]
+      
+      // import * as Bytescale from "@bytescale/sdk";
+      const uploadManager = new Bytescale.UploadManager({
+        // ---------------------------------------------
+        // TODO: insert your API key (www.bytescale.com)
+        // ---------------------------------------------
+        apiKey: "public_W142icW2Lp5TugHCBJ7yxEusYZRp"
+      });
+
+      // File input handler.
+      const onFileSelected = async (event) => {
+        uploadButton.remove();
+
+        const file = event.target.files[0]
+
+        try {
+          const { fileUrl } = await uploadManager.upload({ 
+            data: file,
+            onProgress: ({ progress }) => { 
+              h1.innerHTML = `File uploading... ${progress}%`; 
+            } 
+          });
+          h1.innerHTML = `
+                  Success!
+                  <br/>
+                  <br/>
+        } catch (error) {
+          h1.innerHTML = `Please try another file:<br/><br/>${error.message}`;
+        }
+      }
+    </script>
+    </div>
+
 <script
-  async
-  crossorigin="anonymous"
-  data-clerk-publishable-key="pk_live_Y2xlcmsuZGFudGFsa3Nub25zZW5zZS5jb20k"
-  src="https://clerk.dantalksnonsense.com/npm/@clerk/clerk-js@4/dist/clerk.browser.js"
-  type="text/javascript">
+async
+crossorigin="anonymous"
+data-clerk-publishable-key="pk_live_Y2xlcmsuZGFudGFsa3Nub25zZW5zZS5jb20k"
+src="https://clerk.dantalksnonsense.com/npm/@clerk/clerk-js@4/dist/clerk.browser.js"
+type="text/javascript">
 </script>
 
 <script>
-    window.addEventListener("load", async function () {
-      await Clerk.load();
-  
-      console.log("ClerkJS is loaded");
-    });
-  </script>
+  window.addEventListener("load", async function () {
+    await Clerk.load();
+
+    console.log("ClerkJS is loaded");
+  });
+</script>
 
 <script>
-    window.addEventListener("load", async function () {
-      await Clerk.load();
-  
-      const userButtonDiv =
-        document.getElementById('user-button');
-  
+  window.addEventListener("load", async function () {
+    await Clerk.load();
+
+    const userButtonDiv =
+      document.getElementById('user-button');
+
+    Clerk.mountUserButton(userButtonDiv);
+  });
+</script>
+
+<script>
+  window.addEventListener("load", async function () {
+    await Clerk.load();
+
+    if (Clerk.user) {
+      document.getElementById("app").innerHTML = `
+        <div id="user-button"></div>
+      `;
+
+      const userButtonDiv = document.getElementById("user-button");
+
       Clerk.mountUserButton(userButtonDiv);
-    });
-  </script>
+    } else {
+      document.getElementById("app").innerHTML = `
+        <div id="sign-in">Sign In</div>
+      `;
 
-<script>
-    window.addEventListener("load", async function () {
-      await Clerk.load();
-  
-      if (Clerk.user) {
-        document.getElementById("app").innerHTML = `
-          <div id="user-button"></div>
-        `;
-  
-        const userButtonDiv = document.getElementById("user-button");
-  
-        Clerk.mountUserButton(userButtonDiv);
-      } else {
-        document.getElementById("app").innerHTML = `
-          <div id="sign-in">Sign In</div>
-        `;
-  
-        const signInDiv = document.getElementById("sign-in");
+      const signInDiv = document.getElementById("sign-in");
 
-        signInDiv.addEventListener('click', function() {
-            Clerk.openSignIn();(signInDiv);
-        });
-      }
-    });
-  </script>
-    </body>
+      signInDiv.addEventListener('click', function() {
+          Clerk.openSignIn();(signInDiv);
+      });
+    }
+  });
+</script>
+  </body>
 </html>

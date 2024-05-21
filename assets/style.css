@@ -117,3 +117,17 @@ body {
     align-items: center;
     text-align: center;
     }
+
+    .upload {
+        background-color: white;
+        color: black;
+        padding: 20px;
+        border-radius: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .upload input {
+        background-color: #efefef;
+        border-radius: 5px;
+    }

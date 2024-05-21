@@ -1,31 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="https://js.bytescale.com/upload-widget/v4"></script>
-    <script>
-      // -----
-      // Configuration:
-      // https://www.bytescale.com/docs/upload-widget#configuration
-      // -----
-      const options = {
-        apiKey: "public_W142icW2Lp5TugHCBJ7yxEusYZRp", // This is your API key.
-        maxFileCount: 1
-      };
-
-      // import * as Bytescale from "@bytescale/upload-widget";
-      Bytescale.UploadWidget.open(options).then(
-        files => {
-          const fileUrls = files.map(x => x.fileUrl).join("\n");
-          const success = fileUrls.length === 0
-            ? "No file selected."
-            : `File uploaded:\n\n${fileUrls}`;
-          alert(success);
-        },
-        error => {
-          alert(error);
-        }
-      );
-    </script>
         <meta charset="UTF-8">
         <title>OnlyDans</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,6 +72,47 @@ Clerk Publishable key and Frontend API URL -->
         });
       }
     });
+  </script>
+
+  <script>
+    async function listFolder(params) {  
+  const baseUrl  = "https://api.bytescale.com";
+  const path     = `/v2/accounts/${params.accountId}/folders/list`;
+  const entries  = obj => Object.entries(obj).filter(([,val]) => (val ?? null) !== null);
+  const query    = entries(params.querystring ?? {})
+                     .flatMap(([k,v]) => Array.isArray(v) ? v.map(v2 => [k,v2]) : [[k,v]])
+                     .map(kv => kv.join("=")).join("&");
+  const response = await fetch(`${baseUrl}${path}${query.length > 0 ? "?" : ""}${query}`, {
+    method: "GET",
+    headers: Object.fromEntries(entries({
+      "Authorization": `Bearer ${params.apiKey}`,
+    }))
+  });
+  const result = await response.json();
+  if (Math.floor(response.status / 100) !== 2)
+    throw new Error(`Bytescale API Error: ${JSON.stringify(result)}`);
+  return result;
+}
+
+listFolder({
+  accountId: "YOUR_ACCOUNT_ID",
+  apiKey: "YOUR_API_KEY",
+  querystring: {
+    folderPath: "/uploads",
+//  - Optional -
+//  cursor: "aGVsbG8=",
+//  dryRun: true,
+//  includeFiles: true,
+//  includeOverriddenStorage: true,
+//  includePhysicalFolders: true,
+//  includeVirtualFolders: true,
+//  limit: 50,
+//  recursive: true
+  }
+}).then(
+  response => console.log(`Success: ${JSON.stringify(response)}`),
+  error => console.error(error)
+);
   </script>
     </body>
 </html>
