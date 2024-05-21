@@ -1,8 +1,33 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="https://js.bytescale.com/upload-widget/v4"></script>
+    <script>
+      // -----
+      // Configuration:
+      // https://www.bytescale.com/docs/upload-widget#configuration
+      // -----
+      const options = {
+        apiKey: "public_W142icW2Lp5TugHCBJ7yxEusYZRp", // This is your API key.
+        maxFileCount: 1
+      };
+
+      // import * as Bytescale from "@bytescale/upload-widget";
+      Bytescale.UploadWidget.open(options).then(
+        files => {
+          const fileUrls = files.map(x => x.fileUrl).join("\n");
+          const success = fileUrls.length === 0
+            ? "No file selected."
+            : `File uploaded:\n\n${fileUrls}`;
+          alert(success);
+        },
+        error => {
+          alert(error);
+        }
+      );
+    </script>
         <meta charset="UTF-8">
-        <title>HXGN</title>
+        <title>OnlyDans</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
