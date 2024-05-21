@@ -1,0 +1,119 @@
+body {
+    background-color: black;
+    color: white;
+    margin-top: 100px;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    }
+    
+    .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    background-color: #1b1b1b;
+    color: #fff;
+    height: 80px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: 1;
+    }
+    
+    .navbar ul {
+    display: flex;
+    list-style-type: none;
+    justify-content: center;
+    margin-right: 10px;
+    }
+    
+    .navbar a {
+    text-decoration: none;
+    color: #fff;
+    }
+    
+    .navbar li {
+    margin-left: 10px;
+    }
+    
+    .TitleIMG {
+    display: flex;
+    align-items: center;
+    margin-right: auto; /* Pushes it to the left */
+    }
+    
+    .TitleIMG:hover {
+    cursor: pointer;
+    }
+    
+    .TitleIMG img {
+    width: 250px;
+    height: auto;
+    margin-right: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+    }
+    
+    .main-title {
+    display: flex;
+    align-items: center;
+    min-height: 100px;
+    margin-top: 40px;
+    margin-left: 20px;
+    }
+    
+    .main-title-img {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 50px;
+    margin-left: 30px;
+    width: 700px;
+    position: relative;
+    right: auto;
+    }
+    
+    .main-title-img img {
+    width: 500px;
+    box-shadow: 0 0 0px 0px white, 0 0 0px 0px white, 0 0 30px 15px white;
+    border-radius: 5%;
+    transform-style: preserve-3d;
+    transform: rotate3d(-0.5, 2, 0, 45deg);
+    }
+    .main-title-heading {
+    text-align: center;
+    align-items: center;
+    min-width: 40px;
+    }
+    
+    .about {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 100px;
+    }
+    
+    .about .arrow {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    background-color: gray;
+    width: 100px;
+    padding: 1px;
+    justify-content: center;
+    position: fixed;
+    top: 91%;
+    }
+    
+    .about .arrow svg {
+    width: 50px;
+    height: 100%;
+    }
+    
+    .about .content {
+    background-color: gray;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    }
