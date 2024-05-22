@@ -1,13 +1,90 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <script src="https://js.bytescale.com/sdk/v3"></script>
+        <meta charset="UTF-8">
         <title>OnlyDans</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
         <link href="assets/style.css" rel="stylesheet">
     <script src="https://js.bytescale.com/sdk/v3"></script>
+    <script>
+      // import * as Bytescale from "@bytescale/sdk";
+      const uploadManager = new Bytescale.UploadManager({
+        apiKey: "public_W142icW2Lp5TugHCBJ7yxEusYZRp" // This is your API key.
+      });
+
+      const onFileSelected = async event => {
+        const file = event.target.files[0];
+
+        try {
+          const { fileUrl, filePath } = await uploadManager.upload({
+
+            // Supported types:
+            // - String
+            // - Blob
+            // - ArrayBuffer
+            // - File (i.e. from a DOM file input element)
+            data: file,
+
+            // ---------
+            // Optional:
+            // ---------
+
+            // Required if 'data' is a stream. Node.js only. (Not required when uploading files from the browser.)
+            // size: 5098, // e.g. fs.statSync("file.txt").size
+
+            // Required if 'data' is a stream, buffer, or string. (Not required for DOM file inputs or blobs.)
+            // mime: "application/octet-stream",
+
+            // Required if 'data' is a stream, buffer, or string. (Not required for DOM file inputs or blobs.)
+            // originalFileName: "my_file.txt",
+
+            // Reports progress: bytesTotal, bytesSent, progress.
+            // onProgress: ({ progress }) => console.log(progress),
+
+            // Controls multipart upload concurrency. Ignored if 'data' is a stream.
+            // maxConcurrentUploadParts: 4,
+
+            // Up to 2KB of arbitrary JSON.
+            // metadata: {
+            //   productId: 60891
+            // },
+
+            // Up to 25 tags per file.
+            // tags: [
+            //   "example_tag"
+            // ],
+
+            // About file paths:
+            // - Your API key's "file upload path" is used by default, and can be changed by editing the API key's settings.
+            // - You can override the API key's file upload path by specifying a path below.
+            // - You may use path variables (e.g. "{UTC_DAY}"): https://www.bytescale.com/docs/path-variables
+            // path: {
+            //   folderPath: "/uploads/{UTC_YEAR}/{UTC_MONTH}/{UTC_DAY}",
+            //   fileName: "{UTC_TIME_TOKEN_INVERSE}{UNIQUE_DIGITS_2}{ORIGINAL_FILE_EXT}"
+            // },
+
+            // Set to 'isCancelled = true' after invoking 'upload' to cancel the upload.
+            // cancellationToken: {
+            //   isCancelled: false
+            // }
+          });
+
+          // --------------------------------------------
+          // File successfully uploaded!
+          // --------------------------------------------
+          // The 'filePath' uniquely identifies the file,
+          // and is what you should save to your API.
+          // --------------------------------------------
+          alert(`File uploaded:\n${fileUrl}`);
+
+        } catch (e: any) {
+          alert(`Error:\n${e.message}`);
+        }
+      }
+    </script>
   </head>
   <body>
     <div class="navbar">
@@ -19,99 +96,8 @@
 
       </ul>
   </div>
-
-    <div class="upload">
-      <h1>Please select a file...</h1>
+  <div class="upload">
     <input type="file" onchange="onFileSelected(event)" />
-    <script>
-      // DOM Elements
-      const d            = document
-      const h1           = d.getElementsByTagName("h1")[0]
-      const uploadButton = d.getElementsByTagName("input")[0]
-      
-      // import * as Bytescale from "@bytescale/sdk";
-      const uploadManager = new Bytescale.UploadManager({
-        // ---------------------------------------------
-        // TODO: insert your API key (www.bytescale.com)
-        // ---------------------------------------------
-        apiKey: "public_W142icW2Lp5TugHCBJ7yxEusYZRp"
-      });
-
-      // File input handler.
-      const onFileSelected = async (event) => {
-        uploadButton.remove();
-
-        const file = event.target.files[0]
-
-        try {
-          const { fileUrl } = await uploadManager.upload({ 
-            data: file,
-            onProgress: ({ progress }) => { 
-              h1.innerHTML = `File uploading... ${progress}%`; 
-            } 
-          });
-          h1.innerHTML = `
-                  Success!
-                  <br/>
-                  <br/>
-        } catch (error) {
-          h1.innerHTML = `Please try another file:<br/><br/>${error.message}`;
-        }
-      }
-    </script>
     </div>
-
-<script
-async
-crossorigin="anonymous"
-data-clerk-publishable-key="pk_live_Y2xlcmsuZGFudGFsa3Nub25zZW5zZS5jb20k"
-src="https://clerk.dantalksnonsense.com/npm/@clerk/clerk-js@4/dist/clerk.browser.js"
-type="text/javascript">
-</script>
-
-<script>
-  window.addEventListener("load", async function () {
-    await Clerk.load();
-
-    console.log("ClerkJS is loaded");
-  });
-</script>
-
-<script>
-  window.addEventListener("load", async function () {
-    await Clerk.load();
-
-    const userButtonDiv =
-      document.getElementById('user-button');
-
-    Clerk.mountUserButton(userButtonDiv);
-  });
-</script>
-
-<script>
-  window.addEventListener("load", async function () {
-    await Clerk.load();
-
-    if (Clerk.user) {
-      document.getElementById("app").innerHTML = `
-        <div id="user-button"></div>
-      `;
-
-      const userButtonDiv = document.getElementById("user-button");
-
-      Clerk.mountUserButton(userButtonDiv);
-    } else {
-      document.getElementById("app").innerHTML = `
-        <div id="sign-in">Sign In</div>
-      `;
-
-      const signInDiv = document.getElementById("sign-in");
-
-      signInDiv.addEventListener('click', function() {
-          Clerk.openSignIn();(signInDiv);
-      });
-    }
-  });
-</script>
   </body>
 </html>

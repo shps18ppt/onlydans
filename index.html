@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="https://js.bytescale.com/sdk/v3"></script>
         <meta charset="UTF-8">
         <title>OnlyDans</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +18,10 @@
                 <div id="app"></div>
 
             </ul>
+        </div>
+        <div id="twitch-embed"></div>
+        <div id="videoList"></div>
+            
         </div>
 
 <!-- Initialize Clerk with your
@@ -113,6 +118,25 @@ listFolder({
   response => console.log(`Success: ${JSON.stringify(response)}`),
   error => console.error(error)
 );
+  </script>
+  <script>
+    import * as Bytescale from "@bytescale/sdk";
+
+const folderApi = new Bytescale.FolderApi({
+  apiKey: "secret_W142icWCwF93RdykpmLUoSs81XnNY" // e.g. "secret_xxxxx"
+});
+
+folderApi
+  .listFolder({
+    accountId: "W142icW", // e.g. "W142hJk"
+    folderPath: "/uploads",
+    recursive: false
+  })
+  .then(
+    // Note: operation is paginated, see 'result.cursor' and 'params.cursor'.
+    result => console.log(`Items in folder: ${result.items.length}`),
+    error => console.error(error)
+  );
   </script>
     </body>
 </html>
