@@ -1,64 +1,89 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://js.bytescale.com/sdk/v3"></script>
-        <meta charset="UTF-8">
-        <title>OnlyDans</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-        <link href="assets/style.css" rel="stylesheet">
-    <script src="https://js.bytescale.com/sdk/v3"></script>
+    <script src="https://js.bytescale.com/upload-widget/v4"></script>
+    <script>
+      // -----
+      // Configuration:
+      // https://www.bytescale.com/docs/upload-widget#configuration
+      // -----
+      const options = {
+        apiKey: "free", // Get API key: https://www.bytescale.com/get-started
+
+        maxFileCount: 10,
+
+        // Dropzone configuration:
+        layout: "inline",
+        container: "#my-container",
+
+        showFinishButton: true,
+
+        // To remove the 'finish' button:
+        // showFinishButton: false,
+        // onUpdate: ({ uploadedFiles, pendingFiles, failedFiles }) => {
+        //   const fileUrls = uploadedFiles.map(x => x.fileUrl).join("\n");
+        //   if (fileUrls.length > 0) {
+        //     alert(`File(s) uploaded:\n\n${fileUrls}`);
+        //   }
+        // }
+      };
+
+      // import * as Bytescale from "@bytescale/upload-widget";
+      Bytescale.UploadWidget.open(options).then(
+        files => {
+          const fileUrls = files.map(x => x.fileUrl).join("\n");
+          const success = fileUrls.length === 0
+            ? "No file selected."
+            : `File uploaded:\n\n${fileUrls}`;
+          alert(success);
+        },
+        error => {
+          alert(error);
+        }
+      );
+    </script>
   </head>
   <body>
-    <div class="navbar">
-      <div class="TitleIMG">
-          <img src="assets/ONLYDANS.png"</img>
-      </div>
-      <ul>
-          <div id="app"></div>
-
-      </ul>
-  </div>
-    <div class="upload">
-    <h1>Please select a file...</h1>
-    <input type="file" onchange="onFileSelected(event)" />
-  </div>
+    <div id="my-container"
+         style="position: relative; margin: 0 auto; width: 80%; height: 350px;">
+    </div>
+    
     <script>
-      // DOM Elements
-      const d            = document
-      const h1           = d.getElementsByTagName("h1")[0]
-      const uploadButton = d.getElementsByTagName("input")[0]
-      
-      // import * as Bytescale from "@bytescale/sdk";
-      const uploadManager = new Bytescale.UploadManager({
-        // ---------------------------------------------
-        // TODO: insert your API key (www.bytescale.com)
-        // ---------------------------------------------
-        apiKey: "free"
-      });
+      req.on('end', () => {
+  try {
+    // Parse the request body as JSON
+    const webhookData = JSON.parse(body);
 
-      // File input handler.
-      const onFileSelected = async (event) => {
-        uploadButton.remove();
+    // Check if the fileUrls property exists and is not empty
+    if (webhookData.fileUrls && webhookData.fileUrls.length > 0) {
+      // Store the fileUrls in the string variable
+      fileUrls = webhookData.fileUrls;
 
-        const file = event.target.files[0]
+      // Log the fileUrls
+      console.log(fileUrls);
 
-        try {
-          const { fileUrl } = await uploadManager.upload({ 
-            data: file,
-            onProgress: ({ progress }) => { 
-              h1.innerHTML = `File uploading... ${progress}%`; 
-            } 
-          });
-          h1.innerHTML = `
-                  Media uploaded!
-                  <br/>
-                  <br/>
-        } catch (error) {
-          h1.innerHTML = `Please try another file:<br/><br/>${error.message}`;
+      // Make a POST request to the webhook URL
+      makeWebhookRequest(webhookUrl, webhookData, (err, response) => {
+        if (err) {
+          console.error(err);
+          res.statusCode = 500;
+          res.end('Internal Server Error');
+        } else {
+          res.statusCode = 200;
+          res.end('OK');
         }
-      }
+      });
+    } else {
+      console.log('No fileUrls in the webhook data');
+      res.statusCode = 400;
+      res.end('Bad Request');
+    }
+  } catch (err) {
+    console.error(err);
+    res.statusCode = 400;
+    res.end('Bad Request');
+  }
+});
     </script>
   </body>
 </html>
